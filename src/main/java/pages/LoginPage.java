@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class LoginPage extends BasePage {
+public class LoginPage extends BasePage{
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -22,13 +22,13 @@ public class LoginPage extends BasePage {
     public static final By LOGIN_BUTTON = By.xpath("//*[@id='login-button']");
     public static final By BOT_LOGO = By.xpath("//*[@id='bot_column-button']");
 
-    public void login(String username, String password) {
+    public ProductsPage login(String username, String password) {
         waitForElementLocated(USERNAME_INPUT, 10);
         driver.findElement(USERNAME_INPUT).sendKeys(username);
         waitForElementLocated(PASSWORD_INPUT, 10);
         driver.findElement(PASSWORD_INPUT).sendKeys(password);
-        waitForElementLocated(LOGIN_BUTTON, 10);
         driver.findElement(LOGIN_BUTTON).click();
+        return new ProductsPage(driver);
     }
 
     public boolean isElementDisplayed() {
@@ -47,8 +47,9 @@ public class LoginPage extends BasePage {
         driver.switchTo().defaultContent();
     }
 
-    public void openPage() {
-        driver.get("https://www.saucedemo.com/");
+    public LoginPage openPage() {
+        super.openPage(LOGIN_URL);
+        return this;
     }
 
     public void waitForPageOpened() {
@@ -61,11 +62,12 @@ public class LoginPage extends BasePage {
         WebElement foo = fluent.until(driver -> driver.findElement(By.id("foo")));
     }
 
-    public void waitForPageLoaded() {
+    public LoginPage waitForPageLoaded() {
         new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
             }
         };
+        return this;
     }
 }
